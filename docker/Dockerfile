@@ -1,4 +1,4 @@
-FROM elixir:latest
+FROM elixir
 
 ARG BLOCKSCOUT_VERSION=master
 ENV DEBIAN_FRONTEND=noninteractive
@@ -34,6 +34,9 @@ RUN   git clone https://github.com/poanetwork/blockscout.git /opt/app \
 # Install Node.js and Elixir dependencies
 RUN   cd apps/explorer_web/assets && npm install; cd - \
    && cd apps/explorer && npm install; cd - 
+
+# Install Rust
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
 
 # Build explorer
 # Note: Alternatively if theres a build artifact from CI, we pull it from 
