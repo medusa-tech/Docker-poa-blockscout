@@ -1,6 +1,6 @@
 FROM elixir:latest
 
-ARG BLOCKSCOUT_VERSION=blockscout-readme
+ARG BLOCKSCOUT_VERSION=master
 ENV DEBIAN_FRONTEND=noninteractive
 ENV MIX_ENV=production
 
@@ -11,7 +11,7 @@ RUN    apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get update \
     && apt-get install -yqq netcat libtool automake supervisor locales jq \
-    && curl -sL https://deb.nodesource.com/setup_10.x | bash - \ 
+    && curl -sL https://deb.nodesource.com/setup_14.x | bash - \ 
     && apt install -yqq nodejs \
     && npm install -g brunch
 
