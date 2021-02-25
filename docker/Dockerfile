@@ -36,7 +36,16 @@ RUN   cd apps/explorer_web/assets && npm install; cd - \
    && cd apps/explorer && npm install; cd - 
 
 # Install Rust
-RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
+RUN curl https://sh.rustup.rs -sSf | \
+    sh -s -- --default-toolchain stable -y
+
+# Update PATH
+ENV PATH=/home/poausr/.cargo/bin:$PATH
+
+# Check that cargo and rustc are installed
+# RUN cargo --version
+
+# RUN rustc --version
 
 # Build explorer
 # Note: Alternatively if theres a build artifact from CI, we pull it from 
