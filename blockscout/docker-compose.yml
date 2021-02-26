@@ -4,29 +4,31 @@ services:
   poa-blockscout:
     restart: unless-stopped
     build:
-      context: ./docker
-      dockerfile: Dockerfile
+      context: ./.docker/app
+      dockerfile: app.dockerfile
+    environment: 
+      DB_HOST: "postgres"
+      DB_USER: "postgres"
+      DB_PASS: "password"
+      DATABASE_URL: postgresql://postgres:password@postgres
     ports:
       - "80:4000"
-    volumes:
-      - ./environment:/etc/environment
-      - ./docker/entrypoint.sh:/opt/app/entrypoint.sh
     networks:
       - blockscout_network
     depends_on:
-      - postgresql
+      - postgres
 
-  postgresql:
+  postgres:
     restart: unless-stopped
-    image: postgres
+    build: 
+      context: ./.docker/db
+      dockerfile: db.dockerfile
+    user: postgres
     environment:
-      POSTGRES_PASSWORD: 1234qwer
+      POSTGRES_PASSWORD: password
     networks:
       - blockscout_network
-    # volumes:
-    #     - ./ssl/server.crt:/var/lib/postgresql/ssl/server.crt
-    #     - ./ssl/server.key:/var/lib/postgresql/ssl/server.key
-    # command: -c ssl=on -c ssl_cert_file=/var/lib/postgresql/ssl/server.crt -c ssl_key_file=/var/lib/postgresql/ssl/server.key
+    command: -c ssl=on -c ssl_cert_file=/var/lib/postgresql/ssl/server.crt -c ssl_key_file=/var/lib/postgresql/ssl/server.key
 
 networks:
   blockscout_network:

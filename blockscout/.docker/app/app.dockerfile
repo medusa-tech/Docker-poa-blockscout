@@ -6,11 +6,14 @@ ENV MIX_ENV=production
 
 EXPOSE 4000
 
+RUN apt-get update && \
+    apt-get install -y locales
+
 # Update Pkg-list and get build-reqs
 RUN    apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get update \
-    && apt-get install -yqq netcat libtool automake supervisor locales jq \
+    && apt-get install -yqq netcat libtool automake supervisor jq \
     && curl -sL https://deb.nodesource.com/setup_14.x | bash - \ 
     && apt install -yqq nodejs \
     && npm install -g brunch
@@ -54,6 +57,9 @@ RUN   /opt/app/bin/deployment/build
 
 # Switch back to root for system config tasks
 USER root
+
+# Copy env file
+COPY ./environment /etc/environment
 
 # Set the locale
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
