@@ -1,0 +1,22 @@
+[parity]
+# chain = "dev"
+chain = "/home/openethereum/chainspec.json"
+
+[mining]
+reseal_min_period = 0
+min_gas_price = 0
+
+[rpc]
+interface = "0.0.0.0"
+apis = ["all"]
+cors = ["moz-extension://*"]
+
+[websockets]
+interface = "0.0.0.0"
+apis = ["all"]
+
+#  Specify the APIs available through the HTTP JSON-RPC interface using a comma-delimited list of API names.
+#  Possible names are: all, safe, debug, web3, net, eth, pubsub, personal, signer, parity, parity_pubsub,
+#  parity_accounts, parity_set, traces, secretstore. You can also disable a specific API by putting '-' in the
+#  front, example: all,-personal. 'safe' enables the following APIs: web3, net, eth, pubsub, parity, parity_pubsub,
+#  traces (default: web3,eth,pubsub,net,parity,parity_pubsub,traces)

@@ -1,0 +1,55 @@
+{
+  "name": "BARBABIETOLA-DEV",
+  "engine": {
+    "instantSeal": {
+      "params": {}
+    }
+  },
+  "genesis": {
+    "seal": {
+      "generic": "0x0"
+    },
+    "difficulty": "0x20000",
+    "gasLimit": "0x13880"
+  },
+  "params": {
+    "networkID": "0x1",
+		"chainID": "0x1",
+    "maximumExtraDataSize": "0x20",
+    "minGasLimit": "0x0",
+		"gasLimitBoundDivisor": "0x10"
+  },
+  "accounts": {
+    "0000000000000000000000000000000000000001": {
+      "balance": "1",
+      "builtin": {
+        "name": "ecrecover",
+        "pricing": { "linear": { "base": 3000, "word": 0 } }
+      }
+    },
+    "0000000000000000000000000000000000000002": {
+      "balance": "1",
+      "builtin": {
+        "name": "sha256",
+        "pricing": { "linear": { "base": 60, "word": 12 } }
+      }
+    },
+    "0000000000000000000000000000000000000003": {
+      "balance": "1",
+      "builtin": {
+        "name": "ripemd160",
+        "pricing": { "linear": { "base": 600, "word": 120 } }
+      }
+    },
+    "0000000000000000000000000000000000000004": {
+      "balance": "1",
+      "builtin": {
+        "name": "identity",
+        "pricing": { "linear": { "base": 15, "word": 3 } }
+      }
+    },
+		"8030b409e33e6d542d6b502b598a7a4f0495d4a9": { "balance": "1000000000000000000000000000000000000000000", "nonce": "0" },
+		"ea03ab733598e7e74b8ee8cd91cd32d59f82862f": { "balance": "1000000000000000000000000000000000000000000", "nonce": "0" },
+		"381A86e24F9069A67FF2EDE6D8c0b645cab0f8c1": { "balance": "1000000000000000000000000000000000000000000", "nonce": "0" }
+	}
+}
