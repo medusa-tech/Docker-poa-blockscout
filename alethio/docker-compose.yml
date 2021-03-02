@@ -6,8 +6,8 @@ services:
     image: redis:5.0.5-alpine
     restart: always
     command: ["redis-server", "--appendonly", "yes"]
-    volumes:
-      - .volumes/redis:/data
+    # volumes:
+    #   - .volumes/redis:/data
     networks:
       - node_network
 
@@ -20,7 +20,7 @@ services:
       - POSTGRES_DB=memento
       - POSTGRES_PASSWORD=password
     volumes:
-      - .volumes/postgresql:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     networks:
       - node_network
 
@@ -32,12 +32,12 @@ services:
       - redis
       - postgres
     ports:
-      - 3001:3001
-      - 3000:3000
+      - 5000:3000
+      - 5001:3001
     environment:
       - PG_PASSWORD=password
     volumes:
-      - .volumes/memento:/config
+      - .volumes/memento:/config:ro
     networks:
       - node_network
 
@@ -49,9 +49,9 @@ services:
       - memento
       - node
     ports:
-      - 80:80
+      - 580:80
     volumes:
-      - .volumes/lite-explorer/config.json:/usr/share/nginx/html/config.json
+      - .volumes/lite-explorer/config.json:/usr/share/nginx/html/config.json:ro
     networks:
       - node_network
 
@@ -61,11 +61,15 @@ services:
       - 8545:8545
       - 8546:8546
     volumes:
-      - ./config.toml:/home/openethereum/config.toml
-      - ./chainspec.json:/home/openethereum/chainspec.json
+      - ./config.toml:/home/openethereum/config.toml:ro
+      - ./chainspec.json:/home/openethereum/chainspec.json:ro
+      - ./validator1.key:/home/openethereum/validator1.key:ro
     command: "--config /home/openethereum/config.toml"
     networks:
       - node_network
 
 networks: 
   node_network:
+
+volumes: 
+  postgres_data:

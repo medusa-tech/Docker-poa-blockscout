@@ -1,23 +1,31 @@
 {
   "name": "BARBABIETOLA-DEV",
   "engine": {
-    "instantSeal": {
-      "params": {}
+    "authorityRound": {
+      "params": {
+        "stepDuration": "5",
+        "validators": {
+          "list": ["381A86e24F9069A67FF2EDE6D8c0b645cab0f8c1"]
+        }
+      }
     }
   },
   "genesis": {
     "seal": {
-      "generic": "0x0"
+      "authorityRound": {
+        "step": "0x0",
+        "signature": "0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      }
     },
     "difficulty": "0x20000",
-    "gasLimit": "0x13880"
+    "gasLimit": "0x2fefd8"
   },
   "params": {
     "networkID": "0x10F2C",
-		"chainID": "0x10F2C",
+    "chainID": "0x10F2C",
     "maximumExtraDataSize": "0x20",
     "minGasLimit": "0x0",
-		"gasLimitBoundDivisor": "0x10"
+    "gasLimitBoundDivisor": "0x10"
   },
   "accounts": {
     "0000000000000000000000000000000000000001": {
@@ -48,8 +56,41 @@
         "pricing": { "linear": { "base": 15, "word": 3 } }
       }
     },
-		"8030b409e33e6d542d6b502b598a7a4f0495d4a9": { "balance": "1000000000000000000000000000000000000000000", "nonce": "0" },
-		"ea03ab733598e7e74b8ee8cd91cd32d59f82862f": { "balance": "1000000000000000000000000000000000000000000", "nonce": "0" },
-		"381A86e24F9069A67FF2EDE6D8c0b645cab0f8c1": { "balance": "1000000000000000000000000000000000000000000", "nonce": "0" }
-	}
+    "0000000000000000000000000000000000000005": {
+      "builtin": {
+        "name": "modexp",
+        "activate_at": 5067000,
+        "pricing": { "modexp": { "divisor": 20 } }
+      }
+    },
+    "0000000000000000000000000000000000000006": {
+      "builtin": {
+        "name": "alt_bn128_add",
+        "activate_at": 5067000,
+        "pricing": { "linear": { "base": 500, "word": 0 } }
+      }
+    },
+    "0000000000000000000000000000000000000007": {
+      "builtin": {
+        "name": "alt_bn128_mul",
+        "activate_at": 5067000,
+        "pricing": { "linear": { "base": 40000, "word": 0 } }
+      }
+    },
+    "0000000000000000000000000000000000000008": {
+      "builtin": {
+        "name": "alt_bn128_pairing",
+        "activate_at": 5067000,
+        "pricing": { "alt_bn128_pairing": { "base": 100000, "pair": 80000 } }
+      }
+    },
+    "345c53A9519c112A3d47191F75f7b74745A32C96": {
+      "balance": "1000000000000000000000000000000000000000000",
+      "nonce": "0"
+    },
+    "381A86e24F9069A67FF2EDE6D8c0b645cab0f8c1": {
+      "balance": "1000000000000000000000000000000000000000000",
+      "nonce": "0"
+    }
+  }
 }

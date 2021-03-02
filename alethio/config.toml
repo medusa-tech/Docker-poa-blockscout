@@ -3,20 +3,23 @@
 chain = "/home/openethereum/chainspec.json"
 
 [mining]
-reseal_min_period = 0
-min_gas_price = 0
+reseal_on_txs = "all"
+reseal_min_period = 1000
+reseal_max_period = 5000
+gas_floor_target = "0x165A0BC00"
+tx_queue_size = 16384
+tx_queue_mem_limit = 4096
+tx_queue_per_sender = 16384
 
 [rpc]
 interface = "0.0.0.0"
 apis = ["all"]
+# shittamask
 cors = ["moz-extension://*"]
 
 [websockets]
 interface = "0.0.0.0"
 apis = ["all"]
 
-#  Specify the APIs available through the HTTP JSON-RPC interface using a comma-delimited list of API names.
-#  Possible names are: all, safe, debug, web3, net, eth, pubsub, personal, signer, parity, parity_pubsub,
-#  parity_accounts, parity_set, traces, secretstore. You can also disable a specific API by putting '-' in the
-#  front, example: all,-personal. 'safe' enables the following APIs: web3, net, eth, pubsub, parity, parity_pubsub,
-#  traces (default: web3,eth,pubsub,net,parity,parity_pubsub,traces)
+[account]
+password = ["/home/openethereum/validator1.key"]
