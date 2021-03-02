@@ -39,12 +39,12 @@ db:
 eth:
   client:
     # HTTP endpoint of a web3-compatible node (mandatory)
-    http: "http://node:8545"
+    http: "http://node0:8545"
 
     # Websockets endpoint of JSON-RPC enabled node (optional)
     # if this is present, the task manager will use a newHeads subscription to watch for new blocks
     # if not present, the task manager will use polling to get the highest block
-    ws: "ws://node:8546"
+    ws: "ws://node0:8546"
 
     # The interval at which the task manager will poll the node for best block (default:"15s")
     # optional, only used if `ws` url is not specified

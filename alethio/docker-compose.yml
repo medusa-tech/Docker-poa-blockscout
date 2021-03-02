@@ -32,8 +32,8 @@ services:
       - redis
       - postgres
     ports:
-      - 5000:3000
-      - 5001:3001
+      - 3000:3000
+      - 3001:3001
     environment:
       - PG_PASSWORD=password
     volumes:
@@ -47,7 +47,6 @@ services:
     restart: always
     depends_on:
       - memento
-      - node
     ports:
       - 580:80
     volumes:
@@ -55,15 +54,28 @@ services:
     networks:
       - node_network
 
-  node:
+  node0:
     image: openethereum/openethereum
     ports:
       - 8545:8545
       - 8546:8546
     volumes:
-      - ./config.toml:/home/openethereum/config.toml:ro
-      - ./chainspec.json:/home/openethereum/chainspec.json:ro
-      - ./validator1.key:/home/openethereum/validator1.key:ro
+      - ./node0.toml:/home/openethereum/config.toml:ro
+      - ./base-chainspec.json:/home/openethereum/chainspec.json:ro
+      - ./node.pwds:/node.pwds
+    command: "--config /home/openethereum/config.toml"
+    networks:
+      - node_network
+
+  node1:
+    image: openethereum/openethereum
+    ports:
+      - 8547:8545
+      - 8548:8546
+    volumes:
+      - ./node1.toml:/home/openethereum/config.toml:ro
+      - ./base-chainspec.json:/home/openethereum/chainspec.json:ro
+      - ./node.pwds:/node.pwds
     command: "--config /home/openethereum/config.toml"
     networks:
       - node_network
