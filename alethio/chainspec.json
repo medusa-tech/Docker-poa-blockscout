@@ -13,8 +13,8 @@
     "gasLimit": "0x13880"
   },
   "params": {
-    "networkID": "0x1",
-		"chainID": "0x1",
+    "networkID": "0x10F2C",
+		"chainID": "0x10F2C",
     "maximumExtraDataSize": "0x20",
     "minGasLimit": "0x0",
 		"gasLimitBoundDivisor": "0x10"
