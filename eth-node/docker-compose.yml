@@ -2,10 +2,18 @@ version: "3.6"
 
 services:
   node:
-    image: openethereum/openethereum
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args: 
+        NODE_ID: ${NODE_ID}
     ports:
       - 8545:8545
       - 8546:8546
     volumes:
-      - ./config.toml:/home/openethereum/config.toml
+      - ./node0.toml:/home/openethereum/config.toml:ro
+      - ./base-chainspec.json:/home/openethereum/chainspec.json:ro
+      - ./node.pwds:/node.pwds
     command: "--config /home/openethereum/config.toml"
+    networks:
+      - node_network

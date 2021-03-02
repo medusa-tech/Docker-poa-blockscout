@@ -10,18 +10,22 @@ gas_floor_target = "0x165A0BC00"
 tx_queue_size = 16384
 tx_queue_mem_limit = 4096
 tx_queue_per_sender = 16384
-engine_signer = "0x00Bd138aBD70e2F00903268F3Db08f2D25677C9e"
+engine_signer = "0x00Aa39d30F0D20FF03a22cCfc30B7EfbFca597C2"
 reseal_on_txs = "none"
 
 [rpc]
 interface = "0.0.0.0"
 apis = ["all"]
+
 # shittamask
 cors = ["moz-extension://*", "chrome-extension://*"]
 
 [websockets]
 interface = "0.0.0.0"
 apis = ["all"]
+
+[ipc]
+disable = true
 
 [account]
 password = ["/node.pwds"]
