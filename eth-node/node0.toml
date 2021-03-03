@@ -1,6 +1,6 @@
 [parity]
 # chain = "dev"
-chain = "/home/openethereum/chainspec.json"
+chain = "/chainspec.json"
 #base_path = "/tmp/parity0"
 
 [mining]
@@ -10,7 +10,7 @@ gas_floor_target = "0x165A0BC00"
 tx_queue_size = 16384
 tx_queue_mem_limit = 4096
 tx_queue_per_sender = 16384
-engine_signer = "0x00Bd138aBD70e2F00903268F3Db08f2D25677C9e"
+engine_signer = "0xc0a5d4d62b43b7e24b67fd556a9d30e62d524370"
 reseal_on_txs = "none"
 
 [rpc]
@@ -25,4 +25,8 @@ interface = "0.0.0.0"
 apis = ["all"]
 
 [account]
-password = ["/node.pwds"]
+password = ["/home/openethereum/node.pwd"]
+
+[metrics]
+enable = true
+interface = "0.0.0.0"

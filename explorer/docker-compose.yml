@@ -1,0 +1,19 @@
+version: '3.7'
+
+services:
+  explorer:
+    build: 
+      context: .
+      dockerfile: ./explorer.dockerfile
+    restart: unless-stopped
+    ports:
+      - 580:80
+    networks:
+      - memento_network
+
+networks: 
+  memento_network:
+    external: true
+
+volumes: 
+  postgres_data:

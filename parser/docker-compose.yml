@@ -1,0 +1,46 @@
+# version: "3.7"
+
+services:
+  redis:
+    image: redis:5.0.5-alpine
+    restart: unless-stopped
+    networks:
+      - memento_network
+
+  postgres:
+    image: postgres:alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=memento
+      - POSTGRES_DB=memento
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - memento_network
+
+  memento:
+    build: 
+      context: .
+      dockerfile: ./memento.dockerfile
+    restart: always
+    depends_on:
+      - redis
+      - postgres
+    ports:
+      - 5000:5000
+      - 5001:5001
+    environment:
+      - PG_PASSWORD=password
+    networks:
+      - memento_network
+      - eth_network
+
+networks:
+  memento_network:
+    external: true
+  eth_network:
+    external: true
+
+volumes:
+  postgres_data:
