@@ -28,4 +28,4 @@ apis = ["all"]
 disable = true
 
 [account]
-password = ["/node.pwd"]
+password = ["/home/openethereum/node.pwd"]

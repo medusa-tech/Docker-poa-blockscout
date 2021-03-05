@@ -2,28 +2,19 @@ version: "3.6"
 
 services:
   node:
-    container_name: node
+    container_name: node${NODE_ID}
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: ./.docker/node.dockerfile
       args: 
         NODE_ID: ${NODE_ID}
         JSON_KEY: ${JSON_KEY}
     ports:
-      - 8545:8545
-      - 8546:8546
-      - 3090:3000
+      - ${HTTP_PORT}:8545
+      - ${WS_PORT}:8546
+    #  - 9000:9000
     command: "--config /config.toml"
     networks: 
-      - eth_network
-
-  grafana:
-    image: grafana/grafana
-    environment:
-      GF_INSTALL_PLUGINS: grafana-clock-panel,grafana-simple-json-datasource
-    ports: 
-      - 3080:3000
-    networks:
       - eth_network
 
 networks:

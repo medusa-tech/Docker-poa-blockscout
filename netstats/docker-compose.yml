@@ -1,0 +1,24 @@
+version: "3.6"
+
+services:
+  eth-netstats-api:
+    image: settlemint/eth-net-intelligence-api
+    environment:
+      RPC_HOST: node0
+      WS_SERVER: ws://eth-netstats:3000
+      WS_SECRET: space_cat
+    networks:
+      - eth_network
+
+  eth-netstats:
+    image: settlemint/eth-netstats
+    environment:
+      WS_SECRET: space_cat
+    networks:
+      - eth_network
+    ports:
+      - 5080:3000
+
+networks:
+  eth_network:
+    external: true
