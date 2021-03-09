@@ -1,16 +1,46 @@
 - hosts: all
-  become: yes
   tasks:
-    - name: create the 'simone' user
-      user: name=simone append=yes state=present createhome=yes shell=/bin/bash
+    - name: Update repositories cache and install "docker" package prerequisites
+      apt:
+        pkg:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg
+          - lsb-release
+        update_cache: yes
 
-    - name: allow 'simone' to have passwordless sudo
-      lineinfile:
-        dest: /etc/sudoers
-        line: 'simone ALL=(ALL) NOPASSWD: ALL'
-        validate: 'visudo -cf %s'
+    - name: Add docker repository key
+      shell: curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 
-    - name: set up authorized keys for the simone user
-      authorized_key: user=simone key="{{item}}"
-      with_file:
-        - ~/.ssh/id_rsa.pub
+    - name: Add docker repository 
+      shell: echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+    - name: Install docker
+      apt:
+        pkg:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+        update_cache: yes
+
+    - name: Install docker compose
+      shell: curl -L "https://github.com/docker/compose/releases/download/1.28.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose
+
+    - name: Copy compose
+      ansible.builtin.copy:
+        src: ../../eth-node/
+        dest: /eth-node
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Start services
+      community.docker.docker_compose:
+        build: true
+        project_src: /eth-node
+      environment:
+        NODE_ID: "{{ NODE_ID }}"
+        JSON_KEY: "{{ JSON_KEY }}"
+        HTTP_PORT: "{{ HTTP_PORT }}"
+        WS_PORT: "{{ WS_PORT }}"
