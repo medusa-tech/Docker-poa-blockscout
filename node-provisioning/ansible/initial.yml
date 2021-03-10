@@ -10,7 +10,6 @@
           - lsb-release
           - python3
           - python3-pip
-          - python3-docker
         update_cache: yes
 
     - name: Add docker repository key
@@ -37,6 +36,16 @@
         owner: root
         group: root
         mode: '0644'
+
+    - name: docker-compose python library dependencies
+      pip:
+        name:
+          - docker
+          - docker-compose
+
+    - name: Create eth_network
+      community.docker.docker_network:
+        name: eth_network
 
     - name: Start services
       community.docker.docker_compose:

@@ -20,7 +20,7 @@ resource "digitalocean_droplet" "barbabietola_node" {
   count = 1
   size = "s-1vcpu-1gb"
   region = "fra1"
-  image = "debian-10-x64"
+  image = "debian-10-x64" # "72401866"
   name = "barbabietola-node-${count.index}"
   #ssh_keys = [ "29745930" ]
   ssh_keys = [ data.digitalocean_ssh_key.digital_ocean_0.id ]
@@ -38,7 +38,7 @@ resource "digitalocean_droplet" "barbabietola_node" {
 
   # Run ansible
   provisioner "local-exec" {
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u root -i '${self.ipv4_address},' --private-key ${var.pvt_key} --extra-vars 'NODE_ID=${var.node_id} JSON_KEY=${var.json_key} HTTP_PORT=8545 WS_PORT=8546' ../ansible/initial.yml"
+    command = "ANSIBLE_HOST_KEY_CHECKING=False ANSIBLE_PYTHON_INTERPRETER=/usr/bin/python3 ansible-playbook -u root -i '${self.ipv4_address},' --private-key ${var.pvt_key} --extra-vars 'NODE_ID=${var.node_id} JSON_KEY=${var.json_key} HTTP_PORT=8545 WS_PORT=8546' ../ansible/initial.yml"
   }
 }
 
