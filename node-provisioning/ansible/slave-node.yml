@@ -24,4 +24,5 @@
       environment:
         NODE_ID: "{{ NODE_ID }}"
         JSON_KEY: "{{ JSON_KEY }}"
+        NODE_PUBLIC_IP: "{{ NODE_PUBLIC_IP }}"
         COMMAND_OPTIONS: "--bootnodes={{ enode_uri.json.result }}"
