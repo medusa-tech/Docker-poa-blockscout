@@ -1,0 +1,9 @@
+- hosts: all
+  tasks:
+    - name: Start services
+      community.docker.docker_compose:
+        build: true
+        project_src: /eth-node
+      environment:
+        NODE_ID: "{{ NODE_ID }}"
+        JSON_KEY: "{{ JSON_KEY }}"

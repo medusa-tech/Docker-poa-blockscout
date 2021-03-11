@@ -12,8 +12,13 @@
           - python3-pip
         update_cache: yes
 
+    #- name: Add docker repository key
+    #  shell: curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
     - name: Add docker repository key
-      shell: curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+      ansible.builtin.apt_key:
+        url: https://download.docker.com/linux/debian/gpg
+        keyring: /usr/share/keyrings/docker-archive-keyring.gpg
 
     - name: Add docker repository 
       shell: echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
@@ -46,13 +51,3 @@
     - name: Create eth_network
       community.docker.docker_network:
         name: eth_network
-
-    - name: Start services
-      community.docker.docker_compose:
-        build: true
-        project_src: /eth-node
-      environment:
-        NODE_ID: "{{ NODE_ID }}"
-        JSON_KEY: "{{ JSON_KEY }}"
-        HTTP_PORT: "{{ HTTP_PORT }}"
-        WS_PORT: "{{ WS_PORT }}"

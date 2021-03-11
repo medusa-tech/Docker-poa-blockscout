@@ -1,0 +1,27 @@
+- hosts: all
+  tasks:
+    - name: Get master node enode uri
+      uri:
+        body:
+          "method": "parity_enode"
+          "params": []
+          "id": 1
+          "jsonrpc": "2.0"
+        body_format: json
+        method: POST
+        url: "http://{{ MASTER_NODE_IP }}:8545"
+        return_content: yes
+      register: enode_uri
+
+    - name: Print returned json dictionary
+      debug:
+        var: enode_uri.json
+
+    - name: Start services
+      community.docker.docker_compose:
+        build: true
+        project_src: /eth-node
+      environment:
+        NODE_ID: "{{ NODE_ID }}"
+        JSON_KEY: "{{ JSON_KEY }}"
+        COMMAND_OPTIONS: "--bootnodes={{ enode_uri.json.result }}"

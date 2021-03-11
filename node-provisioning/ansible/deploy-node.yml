@@ -1,6 +1,0 @@
-- hosts: all
-  tasks:
-    - name: Tear down existing services
-      community.docker.docker_compose:
-        project_src: /eth-node
-        state: absent

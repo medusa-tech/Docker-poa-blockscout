@@ -10,13 +10,8 @@ services:
         NODE_ID: ${NODE_ID}
         JSON_KEY: ${JSON_KEY}
     ports:
-      - ${HTTP_PORT}:8545
-      - ${WS_PORT}:8546
+      - 8545:8545
+      - 8546:8546
+      - 30303:30303
     #  - 9000:9000
-    command: "--config /config.toml"
-    networks: 
-      - eth_network
-
-networks:
-  eth_network:
-    external: true
+    command: "--config /config.toml --nat extip:${NODE_PUBLIC_IP} ${COMMAND_OPTIONS}"
