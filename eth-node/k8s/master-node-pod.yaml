@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: master-node
+  labels:
+    component: master-node
+spec:
+  containers:
+    - name: master-node
+      image: eth-master-node:latest
+      imagePullPolicy: Never
+      ports:
+        - containerPort: 8545
+        - containerPort: 8546
+        - containerPort: 30303
+      args:
+        - "--config" 
+        - "/config.toml"
+        - "--nat" 
+        - "extip:$(NODE_PUBLIC_IP)"
