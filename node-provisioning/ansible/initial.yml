@@ -8,8 +8,6 @@
           - curl
           - gnupg
           - lsb-release
-          - python3
-          - python3-pip
         update_cache: yes
 
     #- name: Add docker repository key
@@ -31,23 +29,43 @@
           - containerd.io
         update_cache: yes
 
-    - name: Install docker compose
-      shell: curl -L "https://github.com/docker/compose/releases/download/1.28.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose
+    - name: add Kubernetes apt-key
+      apt_key:
+        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+        keyring: /usr/share/keyrings/kubernetes-archive-keyring.gpg
 
-    - name: Copy compose
-      ansible.builtin.copy:
-        src: ../../eth-node/
-        dest: /eth-node
-        owner: root
-        group: root
-        mode: '0644'
+    - name: Add Kubernetes' APT repository 
+      shell: echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
 
-    - name: docker-compose python library dependencies
-      pip:
-        name:
-          - docker
-          - docker-compose
 
-    - name: Create eth_network
-      community.docker.docker_network:
-        name: eth_network
+    - name: install kubelet
+      apt:
+        name: kubelet
+        update_cache: true
+
+    - name: install kubeadm
+      apt:
+        name: kubeadm
+        update_cache: true
+
+
+#    - name: Install docker compose
+#      shell: curl -L "https://github.com/docker/compose/releases/download/1.28.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose
+
+#    - name: Copy compose
+#      ansible.builtin.copy:
+#        src: ../../eth-node/
+#        dest: /eth-node
+#        owner: root
+#        group: root
+#        mode: '0644'
+
+#    - name: docker-compose python library dependencies
+#      pip:
+#        name:
+#          - docker
+#          - docker-compose
+
+#    - name: Create eth_network
+#      community.docker.docker_network:
+#        name: eth_network

@@ -1,10 +1,6 @@
-- hosts: all
+- hosts: master
+  become: yes
   tasks:
-    - name: install kubectl
-      apt:
-        name: kubectl
-        update_cache: true
-
     - name: initialize the cluster
       shell: kubeadm init --pod-network-cidr=10.244.0.0/16 >> cluster_initialized.txt
       args:
@@ -13,6 +9,7 @@
 
     - name: create .kube directory
       become: yes
+      become_user: simone
       file:
         path: $HOME/.kube
         state: directory
@@ -21,21 +18,14 @@
     - name: copy admin.conf to user's kube config
       copy:
         src: /etc/kubernetes/admin.conf
-        dest: $HOME/.kube/config
+        dest: /home/simone/.kube/config
         remote_src: yes
+        owner: simone
 
     - name: install Pod network
       become: yes
+      become_user: simone
       shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml >> pod_network_setup.txt
       args:
         chdir: $HOME
         creates: pod_network_setup.txt
-
-    #- name: Start services
-    #  community.docker.docker_compose:
-    #    build: true
-    #    project_src: /eth-node
-    #  environment:
-    #    NODE_ID: "{{ NODE_ID }}"
-    #    JSON_KEY: "{{ JSON_KEY }}"
-    #    NODE_PUBLIC_IP: "{{ NODE_PUBLIC_IP }}"

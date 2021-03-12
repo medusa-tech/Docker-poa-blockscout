@@ -18,7 +18,7 @@ data "digitalocean_ssh_key" "digital_ocean_0" {
 
 resource "digitalocean_droplet" "barbabietola_master_node" {
   # count = 1
-  size = "s-1vcpu-1gb"
+  size = "s-2vcpu-2gb"
   region = "fra1"
   image = "debian-10-x64" # "72401866"
   name = "barbabietola-master-node"
@@ -54,7 +54,7 @@ resource "digitalocean_droplet" "barbabietola_master_node" {
 
 resource "digitalocean_droplet" "barbabietola_slave_node" {
   count = 1
-  size = "s-1vcpu-1gb"
+  size = "s-2vcpu-2gb"
   region = "fra1"
   image = "debian-10-x64" # "72401866"
   name = "barbabietola-slave-node-${count.index}"

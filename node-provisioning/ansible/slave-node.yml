@@ -1,28 +1,50 @@
 - hosts: all
+  gather_facts: false
   tasks:
-    - name: Get master node enode uri
-      uri:
-        body:
-          "method": "parity_enode"
-          "params": []
-          "id": 1
-          "jsonrpc": "2.0"
-        body_format: json
-        method: POST
-        url: "http://{{ MASTER_NODE_IP }}:8545"
-        return_content: yes
-      register: enode_uri
+    - name: get join command
+      shell: kubeadm token create --print-join-command
+      register: join_command_raw
+      tags:
+        - master
 
-    - name: Print returned json dictionary
-      debug:
-        var: enode_uri.json
+    - name: set join command
+      set_fact:
+        join_command: "{{ join_command_raw.stdout_lines[0] }}"
+      tags:
+        - master
 
-    - name: Start services
-      community.docker.docker_compose:
-        build: true
-        project_src: /eth-node
-      environment:
-        NODE_ID: "{{ NODE_ID }}"
-        JSON_KEY: "{{ JSON_KEY }}"
-        NODE_PUBLIC_IP: "{{ NODE_PUBLIC_IP }}"
-        COMMAND_OPTIONS: "--bootnodes={{ enode_uri.json.result }}"
+    - name: join cluster
+      shell: "{{ join_command }} >> node_joined.txt"
+      args:
+        chdir: $HOME
+        creates: node_joined.txt
+      tags:
+        - slave
+
+#  tasks:
+#    - name: Get master node enode uri
+#      uri:
+#        body:
+#          "method": "parity_enode"
+#          "params": []
+#          "id": 1
+#          "jsonrpc": "2.0"
+#        body_format: json
+#        method: POST
+#        url: "http://{{ MASTER_NODE_IP }}:8545"
+#        return_content: yes
+#      register: enode_uri
+#
+#    - name: Print returned json dictionary
+#      debug:
+#        var: enode_uri.json
+#
+#    - name: Start services
+#      community.docker.docker_compose:
+#        build: true
+#        project_src: /eth-node
+#      environment:
+#        NODE_ID: "{{ NODE_ID }}"
+#        JSON_KEY: "{{ JSON_KEY }}"
+#        NODE_PUBLIC_IP: "{{ NODE_PUBLIC_IP }}"
+#        COMMAND_OPTIONS: "--bootnodes={{ enode_uri.json.result }}"
