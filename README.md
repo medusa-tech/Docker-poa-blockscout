@@ -6,9 +6,9 @@
 
 CWD: `eth-node`
 
-Master Node: `docker build --tag=eth-master-node --build-arg NODE_ID=0 --build-arg JSON_KEY=folletto --build-arg NODE_PUBLIC_IP=0.0.0.0 --file=./.docker/node.dockerfile .`
+Master Node: `docker build --tag=eth-master-node --build-arg NODE_ID=0 --build-arg JSON_KEY=folletto --file=./.docker/node.dockerfile .`
 
-Slave Node: ``
+Slave Node: `docker build --tag=eth-slave-node --build-arg NODE_ID=1 --build-arg JSON_KEY=folletto --file=./.docker/node.dockerfile .`
 
 ### RUN NODES
 
@@ -16,9 +16,11 @@ CWD: `eth-node/k8s`
 
 #### DEVELOPMENT WITH MINIKUBE
 
+##### MASTER NODE
+
 1. Add the container image to minikube:
 
-  * Master Node: `minikube cache add eth-master-node:latest`
+  * Master Node: `minikube image load eth-master-node:latest`
 
 2. Run the k8s pod deploy
 
@@ -27,6 +29,10 @@ CWD: `eth-node/k8s`
 3. Run the k8s service deploy
 
   * Master Node: `kubectl apply --filename=master-node-service.yaml`
+
+##### SLAVE NODE
+
+
 
 ### DESTROY
 

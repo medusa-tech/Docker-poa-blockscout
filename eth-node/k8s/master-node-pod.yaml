@@ -13,6 +13,11 @@ spec:
         - containerPort: 8545
         - containerPort: 8546
         - containerPort: 30303
+      env:
+        - name: NODE_PUBLIC_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
       args:
         - "--config" 
         - "/config.toml"
