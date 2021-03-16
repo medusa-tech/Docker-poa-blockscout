@@ -1,8 +1,6 @@
 # Docker-poa-blockscout
 
-## HOW TO
-
-### BUILD NODES
+## BUILD NODES
 
 CWD: `eth-node`
 
@@ -10,33 +8,43 @@ Master Node: `docker build --tag=eth-master-node --build-arg NODE_ID=0 --build-a
 
 Slave Node: `docker build --tag=eth-slave-node --build-arg NODE_ID=1 --build-arg JSON_KEY=folletto --file=./.docker/node.dockerfile .`
 
-### RUN NODES
+If using minikube, add the images to minikube registry:
+
+* Master Node: `minikube image load eth-master-node:latest`
+
+* Slave Node: `minikube image load eth-slave-node:latest`
+
+## RUN NODES
 
 CWD: `eth-node/k8s`
 
-#### DEVELOPMENT WITH MINIKUBE
+### DEPLOYMENTS
 
-##### MASTER NODE
+This is the preferred method!
 
-1. Add the container image to minikube:
+1. Run the k8s deployment: `kubectl apply --filename node-deployment.yaml`
 
-  * Master Node: `minikube image load eth-master-node:latest`
+2. Run the k8s service: `kubectl apply --filename=master-node-service.yaml`
 
-2. Run the k8s pod deploy
+### PODS
+
+#### MASTER NODE
+
+1. Run the k8s pod deploy
 
   * Master Node: `kubectl apply --filename=master-node-pod.yaml`
 
-3. Run the k8s service deploy
+2. Run the k8s service deploy
 
   * Master Node: `kubectl apply --filename=master-node-service.yaml`
 
-##### SLAVE NODE
+#### SLAVE NODE
 
-
-
-### DESTROY
+#### DESTROY
 
 * Master Node Pod: `kubectl delete pods master-node`
+
+* Master Node Pod: `kubectl delete --filename=master-node-pod.yaml` 
 
 * Master Node Service: `kubectl delete service master-node-service`
 

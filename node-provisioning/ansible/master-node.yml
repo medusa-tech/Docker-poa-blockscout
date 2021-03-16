@@ -31,11 +31,7 @@
         chdir: $HOME
         creates: pod_network_setup.txt
 
-    #- name: Start services
-    #  community.docker.docker_compose:
-    #    build: true
-    #    project_src: /eth-node
-    #  environment:
-    #    NODE_ID: "{{ NODE_ID }}"
-    #    JSON_KEY: "{{ JSON_KEY }}"
-    #    NODE_PUBLIC_IP: "{{ NODE_PUBLIC_IP }}"
+    - name: Deploy master
+      community.kubernetes.k8s:
+        state: present
+        src: /k8s/master-deployment.yml

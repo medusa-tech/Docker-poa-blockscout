@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eth-node-master-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: master-node
+  template:
+    metadata:
+      labels:
+        component: master-node
+    spec:
+      containers:
+        - name: master-node
+          image: eth-master-node:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8545
+            - containerPort: 8546
+            - containerPort: 30303
+          env:
+            - name: NODE_PUBLIC_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+          args:
+            - "--config" 
+            - "/config.toml"
+            - "--nat" 
+            - "extip:$(NODE_PUBLIC_IP)"

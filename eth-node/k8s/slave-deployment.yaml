@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eth-node-slave-deployments
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: slave-node
+  template:
+    metadata:
+      labels:
+        component: slave-node
+    spec:
+      containers:
+        - name: slave-node
+          image: eth-slave-node:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8545
+            - containerPort: 8546
+            - containerPort: 30303
+          env:
+            - name: NODE_PUBLIC_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: MASTER_ENODE_URI
+              valueFrom:
+                secretKeyRef:
+                  name: master-enode-uri
+                  key: uri
+          args:
+            - "--config" 
+            - "/config.toml"
+            - "--nat" 
+            - "extip:$(NODE_PUBLIC_IP)"
+            - "--bootnodes=$(MASTER_ENODE_URI)"
