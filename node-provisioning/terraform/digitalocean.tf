@@ -22,7 +22,6 @@ resource "digitalocean_droplet" "barbabietola_master_node" {
   region = "fra1"
   image = "debian-10-x64" # "72401866"
   name = "barbabietola-master-node"
-  #ssh_keys = [ "29745930" ]
   ssh_keys = [ data.digitalocean_ssh_key.digital_ocean_0.id ]
 
   connection {
@@ -58,7 +57,6 @@ resource "digitalocean_droplet" "barbabietola_slave_node" {
   region = "fra1"
   image = "debian-10-x64" # "72401866"
   name = "barbabietola-slave-node-${count.index}"
-  #ssh_keys = [ "29745930" ]
   ssh_keys = [ data.digitalocean_ssh_key.digital_ocean_0.id ]
 
   depends_on = [

@@ -22,10 +22,11 @@ CWD: `eth-node/k8s`
 
 This is the preferred method!
 
-1. Run the k8s deployment: `kubectl apply --filename node-deployment.yaml`
+1. Run the k8s deployment: `kubectl apply --filename master-deployment.yaml`
 
-2. Run the k8s service: `kubectl apply --filename=master-node-service.yaml`
+2. Run the k8s service: `kubectl apply --filename master-service.yaml`
 
+3. Run the k8s ingress `kubectl apply --filename ingress.yaml`
 ### PODS
 
 #### MASTER NODE

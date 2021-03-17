@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: master-service
+spec:
+  ports:
+    - port: 8545
+      name: rpc
+    - port: 8546
+      name: websocket
+    - port: 30303
+      name: discovery
+
+  selector:
+    component: master-node
