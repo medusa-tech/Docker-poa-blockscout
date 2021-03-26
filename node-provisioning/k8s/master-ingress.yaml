@@ -5,20 +5,26 @@ metadata:
 
 spec:
   rules:
-    - host: localhost
-      http:
+    - http:
         paths:
           - path: /rpc
             pathType: Prefix
             backend:
               service:
                 name: master-service
-                port: 
-                  number: 8545
+                port:
+                  name: rpc
           - path: /ws
             pathType: Prefix
             backend:
               service:
                 name: master-service
-                port: 
+                port:
                   name: websocket
+          - path: /discovery
+            pathType: Prefix
+            backend:
+              service:
+                name: master-service
+                port:
+                  name: discovery

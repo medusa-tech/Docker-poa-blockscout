@@ -18,7 +18,7 @@
         url: https://download.docker.com/linux/debian/gpg
         keyring: /usr/share/keyrings/docker-archive-keyring.gpg
 
-    - name: Add docker repository 
+    - name: Add docker repository
       shell: echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
 
     - name: Install docker
@@ -34,9 +34,8 @@
         url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
         keyring: /usr/share/keyrings/kubernetes-archive-keyring.gpg
 
-    - name: Add Kubernetes' APT repository 
+    - name: Add Kubernetes' APT repository
       shell: echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
-
 
     - name: install kubelet
       apt:
@@ -47,3 +46,13 @@
       apt:
         name: kubeadm
         update_cache: true
+
+    - name: Copy eth-node
+      copy:
+        src: ../../eth-node
+        dest: /eth-node
+
+    - name: Copy k8s
+      copy:
+        src: ../k8s
+        dest: /k8s

@@ -21,6 +21,19 @@
       tags:
         - slave
 
+    - name: Build slave node image
+      community.docker.docker_image:
+        name: eth-slave-node
+        build:
+          path: /eth-node
+          dockerfile: ./.docker/node.dockerfile
+          args:
+            NODE_ID: 1
+            JSON_KEY: "{{ JSON_KEY }}"
+        source: build
+        tags:
+          - slave
+
     - name: Get master node enode uri
       uri:
         body:
@@ -30,7 +43,7 @@
           "jsonrpc": "2.0"
         body_format: json
         method: POST
-        url: "http://master-node-service:8545"
+        url: "http://master-service:8545"
         return_content: yes
       register: enode_uri
       tags:
@@ -52,7 +65,7 @@
             name: master-enode-uri
           type: Opaque
           data:
-            uri: {{ enode_uri.json.result | b64encode }}
+            uri: "{{ enode_uri.json.result | b64encode }}"
       tags:
         - slave
 

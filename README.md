@@ -16,7 +16,7 @@ If using minikube, add the images to minikube registry:
 
 ## RUN NODES
 
-CWD: `eth-node/k8s`
+CWD: `node-provisioning/k8s`
 
 ### DEPLOYMENTS
 
@@ -48,6 +48,11 @@ This is the preferred method!
 * Master Node Pod: `kubectl delete --filename=master-node-pod.yaml` 
 
 * Master Node Service: `kubectl delete service master-node-service`
+
+## Contour + Envoy
+
+1. Add the bitnami repository: helm repo add bitnami https://charts.bitnami.com/bitnami
+2. Install the chart: helm install my-release bitnami/contour
 
 ## REFERENCES
 
