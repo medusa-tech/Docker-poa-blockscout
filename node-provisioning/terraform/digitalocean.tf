@@ -4,6 +4,10 @@ terraform {
       source  = "digitalocean/digitalocean"
       version = "2.5.1"
     }
+    local = {
+      source  = "hashicorp/local"
+      version = "2.1.0"
+    }
   }
 }
 
@@ -46,7 +50,7 @@ resource "digitalocean_droplet" "barbabietola_master_node" {
         --tags master \
         --private-key ${var.pvt_key} \
         --extra-vars 'NODE_ID=0 JSON_KEY=${var.json_key} NODE_PUBLIC_IP=${self.ipv4_address}' \
-        ../ansible/deploy.yml
+        ../ansible/00-prepare-k8s/deploy.yml
       EOT
   }
 }
@@ -81,16 +85,22 @@ resource "digitalocean_droplet" "barbabietola_slave_node" {
       ANSIBLE_PYTHON_INTERPRETER=/usr/bin/python3 \
       ansible-playbook \
         --user root \
-        --inventory '${self.ipv4_address},' \
+        --inventory '${self.ipv4_address}' \
         --tags slave \
         --private-key ${var.pvt_key} \
         --extra-vars 'NODE_ID=${count.index + 1} JSON_KEY=${var.json_key} NODE_PUBLIC_IP=${self.ipv4_address} MASTER_NODE_IP=${digitalocean_droplet.barbabietola_master_node.ipv4_address}' \
-        ../ansible/deploy.yml
+        ../ansible/00-prepare-k8s/deploy.yml
       EOT
   }
 }
 
-# output "master_ip_address" {
-#   description = "Master node IP Address."
-#   value = digitalocean_droplet.barbabietola_master_node.ipv4_address
-# }
+resource "local_file" "inventory" {
+  filename = "./hosts.ini"
+
+  content = <<EOT
+    [master]
+    ${digitalocean_droplet.barbabietola_master_node.ipv4_address}
+    [slaves]
+    ${digitalocean_droplet.barbabietola_slave_node.ipv4_address}
+    EOT
+}

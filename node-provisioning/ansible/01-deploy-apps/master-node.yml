@@ -1,0 +1,51 @@
+- hosts: all
+  tasks:
+    - name: Retrieve helm binary archive.
+      unarchive:
+        src: https://get.helm.sh/helm-v3.5.3-linux-amd64.tar.gz
+        dest: /tmp
+        creates: /usr/local/bin/helm
+        remote_src: yes
+
+    - name: Move helm binary into place.
+      command: cp /tmp/linux-amd64/helm /usr/local/bin/helm
+      args:
+        creates: /usr/local/bin/helm
+
+    - name: Add helm repo
+      kubernetes.core.helm_repository:
+        name: bitnami
+        repo_url: "https://charts.bitnami.com/bitnami"
+
+    - name: Install Contour Chart
+      kubernetes.core.helm:
+        name: my-release
+        release_namespace: default
+        chart_ref: bitnami/contour
+
+    # Deploy eth node
+    - name: Build master node image
+      community.docker.docker_image:
+        name: eth-master-node
+        build:
+          path: /eth-node
+          dockerfile: ./.docker/node.dockerfile
+          args:
+            NODE_ID: 0
+            JSON_KEY: "{{ JSON_KEY }}"
+        source: build
+
+    - name: Deploy master service
+      community.kubernetes.k8s:
+        state: present
+        src: /k8s/master-service.yml
+
+    - name: Deploy master node
+      community.kubernetes.k8s:
+        state: present
+        src: /k8s/master-deployment.yml
+
+    - name: Deploy master ingress
+      community.kubernetes.k8s:
+        state: present
+        src: /k8s/master-ingress.yml

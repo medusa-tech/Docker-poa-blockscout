@@ -49,10 +49,10 @@
 
     - name: Copy eth-node
       copy:
-        src: ../../eth-node
+        src: ../../../eth-node
         dest: /eth-node
 
     - name: Copy k8s
       copy:
-        src: ../k8s
+        src: ../../k8s
         dest: /k8s

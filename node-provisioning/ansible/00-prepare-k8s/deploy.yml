@@ -10,7 +10,4 @@
   import_playbook: master-node.yml
 
 - name: Setup slave node
-  tags:
-    - master
-    - slave
   import_playbook: slave-node.yml

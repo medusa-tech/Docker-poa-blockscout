@@ -31,8 +31,8 @@ spec:
                   name: master-enode-uri
                   key: uri
           args:
-            - "--config" 
+            - "--config"
             - "/config.toml"
-            - "--nat" 
+            - "--nat"
             - "extip:$(NODE_PUBLIC_IP)"
             - "--bootnodes=$(MASTER_ENODE_URI)"

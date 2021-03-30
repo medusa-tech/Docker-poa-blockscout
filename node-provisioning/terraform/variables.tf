@@ -15,12 +15,6 @@ variable "pvt_key" {
 }
 
 // useless?
-variable "node_id" {
-  type = number
-  description = "The ETH node id"
-}
-
-// useless?
 variable "json_key" {
   type = string
   description = "The ETH node json account password"
