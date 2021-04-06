@@ -78,7 +78,7 @@ resource "local_file" "inventory" {
     %{ for slave_node in digitalocean_droplet.barbabietola_slave_node }
     ${slave_node.ipv4_address}
     %{ endfor }
-  EOT
+    EOT
 }
 
 resource "null_resource" "provisioning" {
@@ -108,6 +108,7 @@ resource "null_resource" "provisioning" {
         --user root \
         --inventory 'hosts.ini' \
         --private-key ${var.pvt_key} \
+        --extra-vars 'JSON_KEY=${var.json_key}' \
         ../ansible/01-deploy-apps/deploy.yml
       EOT
   }
