@@ -8,6 +8,10 @@ terraform {
       source  = "hashicorp/local"
       version = "2.1.0"
     }
+    null = {
+      source = "hashicorp/null"
+      version = "3.1.0"
+    }
   }
 }
 
@@ -38,21 +42,6 @@ resource "digitalocean_droplet" "barbabietola_master_node" {
   provisioner "remote-exec" {
     inline = ["echo 'server reachable!'"]
   }
-
-  # Run ansible
-  provisioner "local-exec" {
-    command = <<EOT
-      ANSIBLE_HOST_KEY_CHECKING=False \
-      ANSIBLE_PYTHON_INTERPRETER=/usr/bin/python3 \
-      ansible-playbook \
-        --user root \
-        --inventory '${self.ipv4_address},' \
-        --tags master \
-        --private-key ${var.pvt_key} \
-        --extra-vars 'NODE_ID=0 JSON_KEY=${var.json_key} NODE_PUBLIC_IP=${self.ipv4_address}' \
-        ../ansible/00-prepare-k8s/deploy.yml
-      EOT
-  }
 }
 
 resource "digitalocean_droplet" "barbabietola_slave_node" {
@@ -77,21 +66,6 @@ resource "digitalocean_droplet" "barbabietola_slave_node" {
   provisioner "remote-exec" {
     inline = ["echo 'server reachable!'"]
   }
-
-  # Run ansible
-  provisioner "local-exec" {
-    command = <<EOT
-      ANSIBLE_HOST_KEY_CHECKING=False \
-      ANSIBLE_PYTHON_INTERPRETER=/usr/bin/python3 \
-      ansible-playbook \
-        --user root \
-        --inventory '${self.ipv4_address}' \
-        --tags slave \
-        --private-key ${var.pvt_key} \
-        --extra-vars 'NODE_ID=${count.index + 1} JSON_KEY=${var.json_key} NODE_PUBLIC_IP=${self.ipv4_address} MASTER_NODE_IP=${digitalocean_droplet.barbabietola_master_node.ipv4_address}' \
-        ../ansible/00-prepare-k8s/deploy.yml
-      EOT
-  }
 }
 
 resource "local_file" "inventory" {
@@ -101,6 +75,40 @@ resource "local_file" "inventory" {
     [master]
     ${digitalocean_droplet.barbabietola_master_node.ipv4_address}
     [slaves]
-    ${digitalocean_droplet.barbabietola_slave_node.ipv4_address}
-    EOT
+    %{ for slave_node in digitalocean_droplet.barbabietola_slave_node }
+    ${slave_node.ipv4_address}
+    %{ endfor }
+  EOT
+}
+
+resource "null_resource" "provisioning" {
+  depends_on = [
+    local_file.inventory
+  ]
+
+  # Setup k8s
+  provisioner "local-exec" {
+    command = <<EOT
+      ANSIBLE_HOST_KEY_CHECKING=False \
+      ANSIBLE_PYTHON_INTERPRETER=/usr/bin/python3 \
+      ansible-playbook \
+        --user root \
+        --inventory 'hosts.ini' \
+        --private-key ${var.pvt_key} \
+        ../ansible/00-prepare-k8s/deploy.yml
+      EOT
+  }
+
+  # Deploy apps
+  provisioner "local-exec" {
+    command = <<EOT
+      ANSIBLE_HOST_KEY_CHECKING=False \
+      ANSIBLE_PYTHON_INTERPRETER=/usr/bin/python3 \
+      ansible-playbook \
+        --user root \
+        --inventory 'hosts.ini' \
+        --private-key ${var.pvt_key} \
+        ../ansible/01-deploy-apps/deploy.yml
+      EOT
+  }
 }

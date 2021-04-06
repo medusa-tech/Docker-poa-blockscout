@@ -1,9 +1,5 @@
 - name: Master deployment
-  tags:
-    - master
   import_playbook: master-node.yml
 
 - name: Slave deployment
-  tags:
-    - slave
   import_playbook: slave-node.yml

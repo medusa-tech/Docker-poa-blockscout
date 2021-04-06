@@ -1,12 +1,7 @@
 - name: Setup node
-  tags:
-    - master
-    - slave
   import_playbook: initial.yml
 
 - name: Setup master node
-  tags:
-    - master
   import_playbook: master-node.yml
 
 - name: Setup slave node

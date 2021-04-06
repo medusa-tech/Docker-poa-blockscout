@@ -1,4 +1,4 @@
-- hosts: all
+- hosts: slave
   tasks:
     #??
     - name: Build slave node image
