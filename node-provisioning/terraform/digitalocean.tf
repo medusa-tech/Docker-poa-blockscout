@@ -52,10 +52,6 @@ resource "digitalocean_droplet" "barbabietola_slave_node" {
   name     = "barbabietola-slave-node-${count.index}"
   ssh_keys = [data.digitalocean_ssh_key.digital_ocean_0.id]
 
-  depends_on = [
-    digitalocean_droplet.barbabietola_master_node
-  ]
-
   connection {
     type        = "ssh"
     user        = "root"
