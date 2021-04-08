@@ -77,7 +77,7 @@ resource "local_file" "inventory" {
     EOT
 }
 
-resource "null_resource" "provisioning" {
+resource "null_resource" "prepare_cluster" {
   depends_on = [
     local_file.inventory
   ]
@@ -94,6 +94,13 @@ resource "null_resource" "provisioning" {
         ../ansible/00-prepare-k8s/deploy.yml
       EOT
   }
+}
+
+resource "null_resource" "deploy_apps" {
+  depends_on = [
+    local_file.inventory,
+    null_resource.prepare_cluster
+  ]
 
   # Deploy apps
   provisioner "local-exec" {
