@@ -1,5 +1,15 @@
 - hosts: master
   tasks:
+    - name: Copy eth-node
+      copy:
+        src: ../../../eth-node
+        dest: /
+
+    - name: Copy k8s
+      copy:
+        src: ../../k8s
+        dest: /
+
     - name: Retrieve helm binary archive.
       unarchive:
         src: https://get.helm.sh/helm-v3.5.3-linux-amd64.tar.gz
@@ -36,16 +46,19 @@
         source: build
 
     - name: Deploy master service
+      become: yes
       community.kubernetes.k8s:
         state: present
-        src: /k8s/master-service.yml
+        definition: "{{ lookup('file', '/k8s/master-service.yml') | from_yaml }}"
 
     - name: Deploy master node
+      become: yes
       community.kubernetes.k8s:
         state: present
-        src: /k8s/master-deployment.yml
+        definition: "{{ lookup('file', '/k8s/master-deployment.yml') | from_yaml }}"
 
     - name: Deploy master ingress
+      become: yes
       community.kubernetes.k8s:
         state: present
-        src: /k8s/master-ingress.yml
+        definition: "{{ lookup('file', '/k8s/master-ingress.yml') | from_yaml }}"

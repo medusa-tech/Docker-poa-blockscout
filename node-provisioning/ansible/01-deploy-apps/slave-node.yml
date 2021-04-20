@@ -1,6 +1,15 @@
 - hosts: slaves
   tasks:
-    #??
+    - name: Copy eth-node
+      copy:
+        src: ../../../eth-node
+        dest: /
+
+    - name: Copy k8s
+      copy:
+        src: ../../k8s
+        dest: /
+
     - name: Build slave node image
       community.docker.docker_image:
         name: eth-slave-node

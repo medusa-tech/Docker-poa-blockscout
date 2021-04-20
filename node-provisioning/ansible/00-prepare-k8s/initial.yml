@@ -49,13 +49,3 @@
       apt:
         name: kubeadm
         update_cache: true
-
-    - name: Copy eth-node
-      copy:
-        src: ../../../eth-node
-        dest: /eth-node
-
-    - name: Copy k8s
-      copy:
-        src: ../../k8s
-        dest: /k8s
