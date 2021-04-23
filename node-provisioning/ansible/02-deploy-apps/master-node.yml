@@ -1,19 +1,25 @@
 - hosts: master
   tasks:
+    - name: Install python dependencies
+      pip:
+        name:
+          - openshift
+          - requests
+
     - name: Deploy master service
       k8s:
         state: present
-        src: "../../k8s/master-service.yaml"
+        src: "../../k8s/master/master-service.yaml"
         namespace: "default"
 
     - name: Deploy master node
       k8s:
         state: present
-        src: "../../k8s/master-deployment.yaml"
+        src: "../../k8s/master/master-deployment.yaml"
         namespace: "default"
 
     - name: Deploy master ingress
       k8s:
         state: present
-        src: "../../k8s/master-ingress.yaml"
+        src: "../../k8s/master/master-ingress.yaml"
         namespace: "default"

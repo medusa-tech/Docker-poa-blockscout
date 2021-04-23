@@ -9,7 +9,7 @@
           "jsonrpc": "2.0"
         body_format: json
         method: POST
-        url: "http://master-service:8545"
+        url: "http://{{hostvars[groups['master'][0]]['inventory_hostname']}}:8545/rpc"
         return_content: yes
       register: enode_uri
 
@@ -18,7 +18,7 @@
         var: enode_uri.json
 
     - name: Create secret
-      community.kubernetes.k8s:
+      k8s:
         state: present
         definition:
           apiVersion: v1
@@ -29,8 +29,8 @@
           data:
             uri: "{{ enode_uri.json.result | b64encode }}"
 
-    #??
     - name: Deploy slave
-      community.kubernetes.k8s:
+      k8s:
         state: present
-        src: /k8s/slave-deployment.yml
+        src: "../../k8s/slaves/slave-deployment.yaml"
+        namespace: "default"
