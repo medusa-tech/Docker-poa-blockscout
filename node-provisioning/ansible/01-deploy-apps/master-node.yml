@@ -1,5 +1,11 @@
 - hosts: master
   tasks:
+    - name: "Install python dependencies"
+      pip:
+        name:
+          - openshift
+          - requests
+
     - name: Copy eth-node
       copy:
         src: ../../../eth-node
@@ -35,7 +41,7 @@
 
     # Deploy eth node
     - name: Build master node image
-      community.docker.docker_image:
+      docker_image:
         name: eth-master-node
         build:
           path: /eth-node
@@ -46,19 +52,16 @@
         source: build
 
     - name: Deploy master service
-      become: yes
-      community.kubernetes.k8s:
+      k8s:
         state: present
-        definition: "{{ lookup('file', '/k8s/master-service.yml') | from_yaml }}"
+        src: "../../k8s/master-service.yaml"
 
     - name: Deploy master node
-      become: yes
-      community.kubernetes.k8s:
+      k8s:
         state: present
-        definition: "{{ lookup('file', '/k8s/master-deployment.yml') | from_yaml }}"
+        src: "../../k8s/master-deployment.yaml"
 
     - name: Deploy master ingress
-      become: yes
-      community.kubernetes.k8s:
+      k8s:
         state: present
-        definition: "{{ lookup('file', '/k8s/master-ingress.yml') | from_yaml }}"
+        src: "../../k8s/master-ingress.yaml"
