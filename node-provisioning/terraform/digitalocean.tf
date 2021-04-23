@@ -96,7 +96,7 @@ resource "null_resource" "prepare_cluster" {
   }
 }
 
-resource "null_resource" "deploy_apps" {
+resource "null_resource" "deploy_contour" {
   depends_on = [
     local_file.inventory,
     null_resource.prepare_cluster
@@ -111,8 +111,27 @@ resource "null_resource" "deploy_apps" {
         --user root \
         --inventory 'hosts.ini' \
         --private-key ${var.pvt_key} \
+        ../ansible/01-deploy-contour/deploy.yml
+      EOT
+  }
+}
+
+resource "null_resource" "deploy_apps" {
+  depends_on = [
+    null_resource.deploy_contour
+  ]
+
+  # Deploy apps
+  provisioner "local-exec" {
+    command = <<EOT
+      ANSIBLE_HOST_KEY_CHECKING=False \
+      ANSIBLE_PYTHON_INTERPRETER=/usr/bin/python3 \
+      ansible-playbook \
+        --user root \
+        --inventory 'hosts.ini' \
+        --private-key ${var.pvt_key} \
         --extra-vars 'JSON_KEY=${var.json_key}' \
-        ../ansible/01-deploy-apps/deploy.yml
+        ../ansible/02-deploy-apps/deploy.yml
       EOT
   }
 }

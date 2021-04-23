@@ -1,0 +1,19 @@
+- hosts: master
+  tasks:
+    - name: Deploy master service
+      k8s:
+        state: present
+        src: "../../k8s/master-service.yaml"
+        namespace: "default"
+
+    - name: Deploy master node
+      k8s:
+        state: present
+        src: "../../k8s/master-deployment.yaml"
+        namespace: "default"
+
+    - name: Deploy master ingress
+      k8s:
+        state: present
+        src: "../../k8s/master-ingress.yaml"
+        namespace: "default"

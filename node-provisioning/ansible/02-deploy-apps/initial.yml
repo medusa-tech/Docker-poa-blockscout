@@ -1,0 +1,40 @@
+- hosts: all
+  tasks:
+    - name: Install python dependencies
+      pip:
+        name:
+          - openshift
+          - requests
+
+    - name: Copy eth-node
+      copy:
+        src: ../../../eth-node
+        dest: /
+
+    - name: Copy k8s
+      copy:
+        src: ../../k8s
+        dest: /
+
+    # Build eth node images
+    - name: Build master node image
+      docker_image:
+        name: eth-master-node
+        build:
+          path: /eth-node
+          dockerfile: ./.docker/node.dockerfile
+          args:
+            NODE_ID: 0
+            JSON_KEY: "{{ JSON_KEY }}"
+        source: build
+
+    - name: Build slave node image
+      community.docker.docker_image:
+        name: eth-slave-node
+        build:
+          path: /eth-node
+          dockerfile: ./.docker/node.dockerfile
+          args:
+            NODE_ID: 1
+            JSON_KEY: "{{ JSON_KEY }}"
+        source: build
